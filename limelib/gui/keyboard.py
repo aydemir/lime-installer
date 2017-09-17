@@ -81,16 +81,16 @@ class KeyboardWidget(QWidget):
         self.layout().addWidget(self.testEdit)
 
         self.keyboard_list = None
-        if os.path.isfile("/usr/share/lilii/data/models.json"):
-            self.keyboard_list = json.loads(open("/usr/share/lilii/data/models.json").read())
+        if os.path.isfile("/usr/share/lime-installer/data/models.json"):
+            self.keyboard_list = json.loads(open("/usr/share/lime-installer/data/models.json").read())
 
         self.layout_list = None
-        if os.path.isfile("/usr/share/lilii/data/layouts.json"):
-            self.layout_list = json.loads(open("/usr/share/lilii/data/layouts.json").read())
+        if os.path.isfile("/usr/share/lime-installer/data/layouts.json"):
+            self.layout_list = json.loads(open("/usr/share/lime-installer/data/layouts.json").read())
 
         self.variant_list = None
-        if os.path.isfile("/usr/share/lilii/data/variants.json"):
-            self.variant_list = json.loads(open("/usr/share/lilii/data/variants.json").read())
+        if os.path.isfile("/usr/share/lime-installer/data/variants.json"):
+            self.variant_list = json.loads(open("/usr/share/lime-installer/data/variants.json").read())
 
         model = list(self.keyboard_list.keys())
         model.sort()

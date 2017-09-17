@@ -20,7 +20,7 @@
 #
 #
 
-from liliilib.gui.main import main
+from limelib.gui.main import main
 import os
 import sys
 

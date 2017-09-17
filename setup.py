@@ -30,25 +30,25 @@ for l in listdir('languages'):
         langs.append(('languages/%s' % l).replace('.ts', '.qm'))
 
 
-system('pyrcc5 lilii.qrc -o liliilib/resource.py')
+system('pyrcc5 lime-installer.qrc -o limelib/limerc.py')
 
-datas = [('/usr/share/applications', ['data/lilii-installer.desktop']),
-         #('/etc/skel/.config/autostart', ['data/lilii-installer.desktop']),
-         ('/usr/share/icons/hicolor/scalable/apps', ['images/lilii-logo.svg']),
-         ('/usr/share/lilii/languages', langs),
-         ('/usr/share/lilii/data', glob.glob("data/*.json"))
+datas = [('/usr/share/applications', ['data/lime-installer.desktop']),
+         #('/etc/skel/.config/autostart', ['data/lime-installer.desktop']), # system start autostart uncomment
+         ('/usr/share/icons/hicolor/scalable/apps', ['images/lime-installer-logo.svg']),
+         ('/usr/share/lime-installer/languages', langs),
+         ('/usr/share/lime-installer/data', glob.glob("data/*.json"))
          ]
 
 setup(
-    name = "lilii",
-    scripts = ["lilii"],
+    name = "lime-installer",
+    scripts = ["lime-installer"],
     packages = find_packages(),
-    version = "1.0 Alpha",
+    version = "1.0 Beta",
     license = "GPL v3",
     description = "Lime GNU/Linux System Installer",
     author = "Metehan Özbek",
     author_email = "mthnzbk@gmail.com",
-    url = "https://github.com/mthnzbk/lilii",
+    url = "https://github.com/mthnzbk/lime-installer",
     keywords = ["PyQt5", "installer"],
     data_files = datas
 )

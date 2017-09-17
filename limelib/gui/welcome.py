@@ -114,7 +114,7 @@ class WelcomeWidget(QWidget):
             if lang == v:
                 self.parent.lilii_settings["lang"] = k
                 translator = QTranslator(qApp)
-                translator.load("/usr/share/lilii/languages/{}.qm".format(k.split(".")[0]))
+                translator.load("/usr/share/lime-installer/languages/{}.qm".format(k.split(".")[0]))
                 qApp.installTranslator(translator)
 
     def aboutDialog(self):
@@ -125,7 +125,7 @@ class WelcomeWidget(QWidget):
                                          "Thanks to: Fatih Kaya - <b>trlinux41@gmail.com</b></p>".format(qApp.applicationVersion())))
 
     def bugAdressConnect(self):
-        QDesktopServices.openUrl(QUrl("https://github.com/mthnzbk/lilii/issues"))
+        QDesktopServices.openUrl(QUrl("https://github.com/mthnzbk/lime-installer/issues"))
 
     def releaseInfoConnect(self):
         QDesktopServices.openUrl(QUrl("http://limelinux.com/limelinux-indir.html"))

@@ -35,7 +35,7 @@ from .user import UserWidget
 from .widget.lprogressbar import LProgressBar
 
 import sys
-from .. import resource
+from .. import limerc
 
 
 class SingleApplication(QObject):
@@ -193,7 +193,7 @@ class MainWindow(QWidget):
         super().__init__()
         self.setFixedSize(950, 580)
         self.setWindowTitle(self.tr("Lime GNU/Linux System Installer"))
-        self.setWindowIcon(QIcon(":/images/lilii-logo.svg"))
+        self.setWindowIcon(QIcon(":/images/lime-installer-logo.svg"))
         self.setWindowFlags(Qt.WindowTitleHint|Qt.WindowMinimizeButtonHint) #Qt.WindowStaysOnTopHint
 
         x, y = (QDesktopWidget().width()-self.width())/2, (QDesktopWidget().availableGeometry().height()-self.height())/2
@@ -238,14 +238,14 @@ def main():
     app.setApplicationVersion("1.0 Beta")
     locale = QLocale.system().name()
     translator = QTranslator(app)
-    translator.load("/usr/share/lilii/languages/{}.qm".format(locale))
+    translator.load("/usr/share/lime-installer/languages/{}.qm".format(locale))
     app.installTranslator(translator)
 
     single = SingleApplication()
-    if single.hasPrevious("lilii", app.arguments()):
+    if single.hasPrevious("lime-installer", app.arguments()):
         return False
 
-    single.listen("lilii")
+    single.listen("lime-installer")
 
     window = MainWindow()
     window.show()

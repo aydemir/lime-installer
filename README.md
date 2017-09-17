@@ -1,6 +1,6 @@
-# Lime Linux Installer
+# Lime GNU/Linux Installer
 
-System Installer for Lime Linux
+System Installer for Lime GNU/Linux
 
 Developer:
 
@@ -9,7 +9,7 @@ Metehan Özbek - mthnzbk[at]gmail.com
 Testing:
 
 * Before: sudo python3 setup.py install
-* After: sudo lilii
+* After: sudo lime-installer
 
 Dependency:
 

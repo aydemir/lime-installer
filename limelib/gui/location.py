@@ -28,8 +28,8 @@ import os
 
 zone = set()
 
-if os.path.isfile("/usr/share/lilii/data/zone.json"):
-    zone_info = json.loads(open("/usr/share/lilii/data/zone.json").read())
+if os.path.isfile("/usr/share/lime-installer/data/zone.json"):
+    zone_info = json.loads(open("/usr/share/lime-installer/data/zone.json").read())
 
     for k, v in zone_info.items():
         zone.add(k)

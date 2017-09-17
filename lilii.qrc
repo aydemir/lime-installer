@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/">
-        <file>images/lilii-logo.svg</file>
+        <file>images/lime-installer.svg</file>
         <file>images/back.svg</file>
         <file>images/cancel.svg</file>
         <file>images/forward.svg</file>
