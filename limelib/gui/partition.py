@@ -121,6 +121,7 @@ class PartitionWidget(QWidget):
         self.combo_box.currentIndexChanged.connect(self.diskSelect)
         self.zeroPartitionButton.clicked.connect(self.diskPartitionClear)
         self.refreshButton.clicked.connect(self.diskRefresh)
+        self.parent.languageChanged.connect(self.retranslate)
 
         self.diskPartitionList(diskInfo(disksList()[self.combo_box.currentIndex()]))
 

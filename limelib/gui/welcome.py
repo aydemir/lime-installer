@@ -21,7 +21,7 @@
 
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QComboBox, QPushButton, qApp, QMessageBox
 from PyQt5.QtGui import QPixmap, QIcon, QDesktopServices
-from PyQt5.QtCore import Qt, QSize, QTranslator, QLocale, QUrl
+from PyQt5.QtCore import Qt, QSize, QTranslator, QLocale, QUrl, QFile
 
 
 class WelcomeWidget(QWidget):
@@ -99,6 +99,7 @@ class WelcomeWidget(QWidget):
         self.aboutButton.clicked.connect(self.aboutDialog)
         self.bugButton.clicked.connect(self.bugAdressConnect)
         self.releaseButton.clicked.connect(self.releaseInfoConnect)
+        self.parent.languageChanged.connect(self.retranslate)
 
         self.retranslate()
 
@@ -118,8 +119,13 @@ class WelcomeWidget(QWidget):
             if lang == v:
                 self.parent.lilii_settings["lang"] = k
                 translator = QTranslator(qApp)
-                translator.load("/usr/share/lime-installer/languages/{}.qm".format(k.split(".")[0]))
+                path = "/usr/share/lime-installer/languages/{}.qm".format(k.split(".")[0])
+                if QFile().exists(path):
+                    translator.load(path)
+                else:
+                    translator.load("languages/{}.qm".format(k.split(".")[0]))
                 qApp.installTranslator(translator)
+                self.parent.languageChanged.emit()
 
     def aboutDialog(self):
         self.aboutBox = QMessageBox()

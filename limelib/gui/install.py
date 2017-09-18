@@ -52,6 +52,8 @@ class InstallWidget(QWidget):
 
         self.retranslate()
 
+        self.parent.languageChanged.connect(self.retranslate)
+
     def retranslate(self):
         self.setWindowTitle(self.tr("System Installation"))
 

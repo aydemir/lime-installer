@@ -266,6 +266,7 @@ class UserWidget(QWidget):
         self.select_photo.clicked.connect(self.selectPhoto)
         self.take_photo.clicked.connect(self.takePhoto)
         self.retake_photo.clicked.connect(self.retakePhoto)
+        self.parent.languageChanged.connect(self.retranslate)
 
         self.retranslate()
 

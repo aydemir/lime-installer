@@ -50,6 +50,8 @@ class SummaryWidget(QWidget):
         self.textbrowser3 = QTextBrowser()
         self.layout().addWidget(self.textbrowser3)
 
+        self.parent.languageChanged.connect(self.retranslate)
+
         self.retranslate()
 
     def retranslate(self):

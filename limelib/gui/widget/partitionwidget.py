@@ -112,6 +112,6 @@ class LPartitionWidget(QWidget):
             else:
                 painter.drawText(QRectF(24 + (line * 150), (column*32)+78, 40, 12),
                                  Qt.AlignVCenter | Qt.TextDontClip,
-                                 self.tr("{}  Bilinmiyor").format(mbToGB(partition.getSize())))
+                                 self.tr("{}  Unknown").format(mbToGB(partition.getSize())))
 
             line += 1

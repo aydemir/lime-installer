@@ -63,6 +63,7 @@ class FinishWidget(QWidget):
         hlayout.addItem(QSpacerItem(40, 20, QSizePolicy.Preferred, QSizePolicy.Preferred))
 
         restartButton.clicked.connect(self.systemRestart)
+        self.parent.languageChanged.connect(self.retranslate)
 
         self.retranslate()
 

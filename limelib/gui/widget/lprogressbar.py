@@ -58,7 +58,7 @@ class LProgressBar(QWidget):
 
     def paintEvent(self, event):
         painter = QPainter(self)
-        painter.setRenderHint(QPainter.Antialiasing|QPainter.SmoothPixmapTransform)
+        painter.setRenderHints(QPainter.Antialiasing|QPainter.SmoothPixmapTransform)
 
         for index in range(self._stick_count):
             if self.item_index >= index +1:

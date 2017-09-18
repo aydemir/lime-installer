@@ -200,10 +200,11 @@ class FooterWidget(QWidget):
 class MainWindow(QWidget):
 
     lilii_settings = {}
+    languageChanged = pyqtSignal()
 
     def __init__(self, parent=None):
         super().__init__()
-        self.setFixedSize(950, 580)
+        self.setFixedSize(950, 640)
         self.setWindowIcon(QIcon(":/images/lime-installer.svg"))
         self.setWindowFlags(Qt.WindowTitleHint|Qt.WindowMinimizeButtonHint) #Qt.WindowStaysOnTopHint
 
@@ -235,6 +236,7 @@ class MainWindow(QWidget):
         self.wizardWidget.widget(4).applyPage.connect(self.footerWidget.continueButton.setEnabled)
         self.wizardWidget.widget(3).applyPage.connect(self.footerWidget.continueButton.setEnabled)
         self.wizardWidget.widget(6).applyPage.connect(self.footerWidget.continueButton.setEnabled)
+        self.languageChanged.connect(self.retranslate)
 
         self.retranslate()
 

@@ -125,6 +125,7 @@ class KeyboardWidget(QWidget):
         self.modelList.currentTextChanged.connect(self.keyboardModelSelect)
         self.countryList.currentTextChanged.connect(self.countrySelect)
         self.keyboardVList.currentTextChanged.connect(self.keyboardTypeSelect)
+        self.parent.languageChanged.connect(self.retranslate)
 
         self.retranslate()
 

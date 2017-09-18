@@ -53,14 +53,11 @@ class LocationWidget(QWidget):
         self.setLayout(QVBoxLayout())
         self.layout().setAlignment(Qt.AlignCenter)
 
-        layout = QHBoxLayout()
-        self.layout().addLayout(layout)
-
-        worldMap = QLabel()
-        worldMap.setFixedSize(480, 283)
-        worldMap.setScaledContents(True)
-        worldMap.setPixmap(QPixmap(":/images/world.svg"))
-        layout.addWidget(worldMap)
+        self.worldMap = QLabel()
+        self.worldMap.setFixedSize(780, 340)
+        self.worldMap.setScaledContents(True)
+        self.worldMap.setPixmap(QPixmap(":/images/locale/map.png"))
+        self.layout().addWidget(self.worldMap)
 
         hlayout = QHBoxLayout()
         self.layout().addLayout(hlayout)
@@ -91,6 +88,7 @@ class LocationWidget(QWidget):
 
         self.cBox.currentTextChanged.connect(self.zoneChanged)
         self.iBox.currentTextChanged.connect(self.cityChanged)
+        self.parent.languageChanged.connect(self.retranslate)
 
         self.retranslate()
 
