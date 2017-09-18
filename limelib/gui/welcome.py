@@ -34,20 +34,16 @@ class WelcomeWidget(QWidget):
     def __init__(self, parent=None):
         super().__init__()
         self.parent = parent
-        self.setWindowTitle(self.tr("Welcome"))
-
         self.setLayout(QVBoxLayout())
         self.layout().setAlignment(Qt.AlignCenter)
 
-        titleLabel = QLabel()
-        titleLabel.setAlignment(Qt.AlignCenter)
-        titleLabel.setText(self.tr("<h1>Welcome to Lime GNU/Linux System Installer.</h1>"))
-        self.layout().addWidget(titleLabel)
+        self.titleLabel = QLabel()
+        self.titleLabel.setAlignment(Qt.AlignCenter)
+        self.layout().addWidget(self.titleLabel)
 
-        descLabel = QLabel()
-        descLabel.setAlignment(Qt.AlignCenter)
-        descLabel.setText(self.tr("This program is going to ask you some questions and then will install the Lime GNU/Linux to your device."))
-        self.layout().addWidget(descLabel)
+        self.descLabel = QLabel()
+        self.descLabel.setAlignment(Qt.AlignCenter)
+        self.layout().addWidget(self.descLabel)
 
         lLayout = QHBoxLayout()
         lLayout.setAlignment(Qt.AlignCenter)
@@ -63,9 +59,8 @@ class WelcomeWidget(QWidget):
         langLayout.setAlignment(Qt.AlignCenter)
         self.layout().addLayout(langLayout)
 
-        langLabel = QLabel()
-        langLabel.setText(self.tr("Language:"))
-        langLayout.addWidget(langLabel)
+        self.langLabel = QLabel()
+        langLayout.addWidget(self.langLabel)
 
         langComboBox = QComboBox()
         langComboBox.setFixedWidth(250)
@@ -75,29 +70,25 @@ class WelcomeWidget(QWidget):
         linkLayout.setAlignment(Qt.AlignCenter)
         self.layout().addLayout(linkLayout)
 
-        aboutButton = QPushButton()
-        aboutButton.setFlat(True)
-        aboutButton.setText(self.tr("About"))
-        aboutButton.setIcon(QIcon(":/images/about.svg"))
-        aboutButton.setIconSize(QSize(18, 18))
-        linkLayout.addWidget(aboutButton)
+        self.aboutButton = QPushButton()
+        self.aboutButton.setFlat(True)
+        self.aboutButton.setIcon(QIcon(":/images/about.svg"))
+        self.aboutButton.setIconSize(QSize(18, 18))
+        linkLayout.addWidget(self.aboutButton)
 
-        bugButton = QPushButton()
-        bugButton.setFlat(True)
-        bugButton.setText(self.tr("Found Bugs"))
-        bugButton.setIcon(QIcon(":/images/bug.svg"))
-        bugButton.setIconSize(QSize(18, 18))
-        linkLayout.addWidget(bugButton)
+        self.bugButton = QPushButton()
+        self.bugButton.setFlat(True)
+        self.bugButton.setIcon(QIcon(":/images/bug.svg"))
+        self.bugButton.setIconSize(QSize(18, 18))
+        linkLayout.addWidget(self.bugButton)
 
-        releaseButton = QPushButton()
-        releaseButton.setFlat(True)
-        releaseButton.setText(self.tr("Release Notes"))
-        releaseButton.setIcon(QIcon(":/images/release-note.svg"))
-        releaseButton.setIconSize(QSize(18, 18))
-        linkLayout.addWidget(releaseButton)
+        self.releaseButton = QPushButton()
+        self.releaseButton.setFlat(True)
+        self.releaseButton.setIcon(QIcon(":/images/release-note.svg"))
+        self.releaseButton.setIconSize(QSize(18, 18))
+        linkLayout.addWidget(self.releaseButton)
 
-        langComboBox.addItems(["Català", "Deutsch", "English (US)", "Español", "Français", "Magyar", "Italiano",
-                               "Nederlands", "Polski", "Português (Brasil)", "Pусский", "Svenska", "Türkçe"])
+        langComboBox.addItems(self.lang_list.values())
 
         for k, v in self.lang_list.items():
             if QLocale.system().name()+".UTF-8" == k:
@@ -105,9 +96,22 @@ class WelcomeWidget(QWidget):
                 self.parent.lilii_settings["lang"] = k
 
         langComboBox.currentTextChanged.connect(self.langSelect)
-        aboutButton.clicked.connect(self.aboutDialog)
-        bugButton.clicked.connect(self.bugAdressConnect)
-        releaseButton.clicked.connect(self.releaseInfoConnect)
+        self.aboutButton.clicked.connect(self.aboutDialog)
+        self.bugButton.clicked.connect(self.bugAdressConnect)
+        self.releaseButton.clicked.connect(self.releaseInfoConnect)
+
+        self.retranslate()
+
+    def retranslate(self):
+        self.setWindowTitle(self.tr("Welcome"))
+        self.titleLabel.setText(self.tr("<h1>Welcome to Lime GNU/Linux System Installer.</h1>"))
+        self.descLabel.setText(self.tr(
+            "This program is going to ask you some questions and then will install the Lime GNU/Linux to your device."))
+        self.langLabel.setText(self.tr("Language:"))
+        self.aboutButton.setText(self.tr("About"))
+        self.bugButton.setText(self.tr("Found Bug"))
+        self.releaseButton.setText(self.tr("Release Notes"))
+
 
     def langSelect(self, lang):
         for k, v in self.lang_list.items():
@@ -118,14 +122,16 @@ class WelcomeWidget(QWidget):
                 qApp.installTranslator(translator)
 
     def aboutDialog(self):
-        mbox = QMessageBox.about(self, self.tr("About Lilii"),
-                                 self.tr("<h1>Lilii {}</h1>"
-                                         "<b>System installer for Lime GNU/Linux</b>"
-                                         "<p>Copyright 2017 Metehan Özbek - <b>metehan@limelinux.com</b><br>"
-                                         "Thanks to: Fatih Kaya - <b>trlinux41@gmail.com</b></p>".format(qApp.applicationVersion())))
+        self.aboutBox = QMessageBox()
+        self.aboutBox.setWindowTitle(self.tr("About Lime Installer"))
+        self.aboutBox.setText(self.tr("<h1>Lime Installer {}</h1>"
+                                      "<b>System installer for Lime GNU/Linux</b>"
+                                      "<p>Copyright 2017 Metehan Özbek - <b>metehan@limelinux.com</b><br>"
+                                      "Thanks to: Fatih Kaya - <b>trlinux41@gmail.com</b></p>").format(
+                                      qApp.applicationVersion()))
 
     def bugAdressConnect(self):
-        QDesktopServices.openUrl(QUrl("https://github.com/mthnzbk/lime-installer/issues"))
+        QDesktopServices.openUrl(QUrl("https://github.com/lime-installer/lime-installer/issues"))
 
     def releaseInfoConnect(self):
         QDesktopServices.openUrl(QUrl("http://limelinux.com/limelinux-indir.html"))

@@ -36,7 +36,6 @@ class InstallWidget(QWidget):
     def __init__(self, parent=None):
         super().__init__()
         self.parent = parent
-        self.setWindowTitle(self.tr("System Installation"))
         self.setLayout(QVBoxLayout())
 
         self.slide_widget = SlideWidget()
@@ -51,38 +50,41 @@ class InstallWidget(QWidget):
 
         self.addSlides()
 
+        self.retranslate()
 
+    def retranslate(self):
+        self.setWindowTitle(self.tr("System Installation"))
 
     def addSlides(self):
-        slide1 = Slide()
-        slide1.setResource(":/images/about.svg")
-        slide1.setDescription(self.tr("Deneme 1"))
-        self.slide_widget.addWidget(slide1)
+        self.slide1 = Slide()
+        self.slide1.setResource(":/images/about.svg")
+        self.slide1.setDescription(self.tr("Deneme 1"))
+        self.slide_widget.addWidget(self.slide1)
 
-        slide2 = Slide()
-        slide2.setResource(":/images/apply.svg")
-        slide2.setDescription(self.tr("Deneme 2"))
-        self.slide_widget.addWidget(slide2)
+        self.slide2 = Slide()
+        self.slide2.setResource(":/images/apply.svg")
+        self.slide2.setDescription(self.tr("Deneme 2"))
+        self.slide_widget.addWidget(self.slide2)
 
-        slide3 = Slide()
-        slide3.setResource(":/images/back.svg")
-        slide3.setDescription(self.tr("Deneme 3"))
-        self.slide_widget.addWidget(slide3)
+        self.slide3 = Slide()
+        self.slide3.setResource(":/images/back.svg")
+        self.slide3.setDescription(self.tr("Deneme 3"))
+        self.slide_widget.addWidget(self.slide3)
 
-        slide4 = Slide()
-        slide4.setResource(":/images/camera.svg")
-        slide4.setDescription(self.tr("Deneme 4"))
-        self.slide_widget.addWidget(slide4)
+        self.slide4 = Slide()
+        self.slide4.setResource(":/images/camera.svg")
+        self.slide4.setDescription(self.tr("Deneme 4"))
+        self.slide_widget.addWidget(self.slide4)
 
-        slide5 = Slide()
-        slide5.setResource(":/images/disk.svg")
-        slide5.setDescription(self.tr("Deneme 5"))
-        self.slide_widget.addWidget(slide5)
+        self.slide5 = Slide()
+        self.slide5.setResource(":/images/disk.svg")
+        self.slide5.setDescription(self.tr("Deneme 5"))
+        self.slide_widget.addWidget(self.slide5)
 
-        slide6 = Slide()
-        slide6.setResource(":/images/exit.svg")
-        slide6.setDescription(self.tr("Deneme 6"))
-        self.slide_widget.addWidget(slide6)
+        self.slide6 = Slide()
+        self.slide6.setResource(":/images/exit.svg")
+        self.slide6.setDescription(self.tr("Deneme 6"))
+        self.slide_widget.addWidget(self.slide6)
 
     def finish(self):
         self.applyPage.emit(True)
@@ -258,7 +260,7 @@ class Install(QThread):
                         fstab_file.write('UUID={}\t swap \t swap \t defaults\t0\t0\n'.format(device[1], device[2]))
 
                 except IndexError:
-                    print(device, "Bu ne?")
+                    pass
 
             if is_efi():
                 fstab_file.write("efivarfs       /sys/firmware/efi/efivars  efivarfs  defaults  0      1\n")
@@ -301,19 +303,8 @@ class Install(QThread):
         self.percent.emit(self.__percent)
 
     def set_host(self):
-        hosts_text = "# /etc/hosts\n"\
-                     "#\n"\
-                     "# This file describes a number of hostname-to-address\n"\
-                     "# mappings for the TCP/IP subsystem.  It is mostly\n"\
-                     "# used at boot time, when no name servers are running.\n"\
-                     "# On small systems, this file can be used instead of a\n"\
-                     "# \"named\" name server.  Just add the names, addresses\n"\
-                     "# and any aliases to this file...\n"\
-                     "#\n"\
-                     "\n"\
-                     "127.0.0.1   localhost      {}\n"\
-                     "\n"\
-                     "# IPV6 versions of localhost and co\n"\
+        hosts_text = "127.0.0.1   localhost\n"\
+                     "127.0.1.1   {}\n"\
                      "::1     localhost ip6-localhost ip6-loopback\n"\
                      "fe00::0 ip6-localnet\n"\
                      "ff00::0 ip6-mcastprefix\n"\
@@ -360,13 +351,7 @@ class Install(QThread):
         self.percent.emit(self.__percent)
 
     def set_sudoers(self):
-        sudoers = "# to use special input methods. This may allow users to compromise  the root\n"\
-                  "# account if they are allowed to run commands without authentication.\n"\
-                  "#Defaults env_keep = \"LANG LC_ADDRESS LC_CTYPE LC_COLLATE LC_IDENTIFICATION LC_MEASUREMENT "\
-                  "LC_MESSAGES LC_MONETARY LC_NAME LC_NUMERIC LC_PAPER LC_TELEPHONE LC_TIME LC_ALL LANGUAGE LINGUAS "\
-                  "XDG_SESSION_COOKIE XMODIFIERS GTK_IM_MODULEQT_IM_MODULE QT_IM_SWITCHER\"\n"\
-                  "\n"\
-                  "# User privilege specification\n"\
+        sudoers = "# User privilege specification\n"\
                   "root    ALL=(ALL) ALL\n"\
                   "\n"\
                   "# Uncomment to allow people in group wheel to run all commands\n"\
@@ -406,7 +391,7 @@ class Install(QThread):
         #self.chroot_command("passwd -d root") #su ile giriş yapmayı engelliyor gibi. sudo su çalışıyor.
 
         if self.useravatar:
-            shutil.copy(QDir.homePath() + "/.face.icon", self.mount_path+"/root"+"/home/{}".format(self.username))
+            shutil.copy(QDir.homePath() + "/.face.icon", self.mount_path+"/root/home/{}".format(self.username))
 
         self.__percent += 1
         self.percent.emit(self.__percent)
@@ -440,10 +425,10 @@ class Install(QThread):
 
     def install_bootloader(self):
         def boot_part(dev):
-            asd = subprocess.Popen("blkid", stdout=subprocess.PIPE)
-            qwe = asd.stdout.read().decode("utf-8")
+            blkid = subprocess.Popen("blkid", stdout=subprocess.PIPE)
+            blkid_data = blkid.stdout.read().decode("utf-8")
 
-            for o in qwe.split("\n"):
+            for o in blkid_data.split("\n"):
                 i = o.split()
                 try:
                     if i[0][:-1] == dev:
@@ -479,9 +464,6 @@ class Install(QThread):
         os.system("umount --force {}/dev/pts".format(self.mount_path + "/root"))
         os.system("umount --force {}/sys/".format(self.mount_path + "/root"))
         os.system("umount --force {}/proc/".format(self.mount_path + "/root"))
-
-        #os.system("umount {}".format(self.mount_path + "/rootfs"))
-        #os.system("umount {}".format(self.mount_path + "/desktop"))
         os.system("umount -lv {}".format(self.mount_path + "/root"))
 
         self.__percent += 1

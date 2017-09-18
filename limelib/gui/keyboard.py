@@ -30,7 +30,6 @@ class KeyboardWidget(QWidget):
     def __init__(self, parent=None):
         super().__init__()
         self.parent = parent
-        self.setWindowTitle(self.tr("Keyboard Layout"))
         self.setLayout(QVBoxLayout())
         self.layout().setAlignment(Qt.AlignCenter)
 
@@ -46,10 +45,9 @@ class KeyboardWidget(QWidget):
         hlayoutx = QHBoxLayout()
         self.layout().addLayout(hlayoutx)
 
-        modelLabel = QLabel()
-        modelLabel.setFixedWidth(150)
-        modelLabel.setText(self.tr("Keyboard Model:"))
-        hlayoutx.addWidget(modelLabel)
+        self.modelLabel = QLabel()
+        self.modelLabel.setFixedWidth(150)
+        hlayoutx.addWidget(self.modelLabel)
 
         self.modelList = QComboBox()
         hlayoutx.addWidget(self.modelList)
@@ -57,9 +55,8 @@ class KeyboardWidget(QWidget):
         hlayout = QHBoxLayout()
         self.layout().addLayout(hlayout)
 
-        countryLabel = QLabel()
-        countryLabel.setText(self.tr("Language:"))
-        hlayout.addWidget(countryLabel)
+        self.countryLabel = QLabel()
+        hlayout.addWidget(self.countryLabel)
 
         self.countryList = QComboBox()
         self.countryList.setFixedWidth(325)
@@ -67,16 +64,14 @@ class KeyboardWidget(QWidget):
 
         hlayout.addSpacerItem(QSpacerItem(40, 20, QSizePolicy.Preferred, QSizePolicy.Expanding))
 
-        keyboardLabel = QLabel()
-        keyboardLabel.setText(self.tr("Keyboard Kind:"))
-        hlayout.addWidget(keyboardLabel)
+        self.keyboardLabel = QLabel()
+        hlayout.addWidget(self.keyboardLabel)
 
         self.keyboardVList = QComboBox()
         self.keyboardVList.setFixedWidth(325)
         hlayout.addWidget(self.keyboardVList)
 
         self.testEdit = QLineEdit()
-        self.testEdit.setPlaceholderText(self.tr("Test out your keyboard."))
         #self.testEdit.setFixedWidth(800)
         self.layout().addWidget(self.testEdit)
 
@@ -130,6 +125,15 @@ class KeyboardWidget(QWidget):
         self.modelList.currentTextChanged.connect(self.keyboardModelSelect)
         self.countryList.currentTextChanged.connect(self.countrySelect)
         self.keyboardVList.currentTextChanged.connect(self.keyboardTypeSelect)
+
+        self.retranslate()
+
+    def retranslate(self):
+        self.setWindowTitle(self.tr("Keyboard Layout"))
+        self.modelLabel.setText(self.tr("Keyboard Model:"))
+        self.countryLabel.setText(self.tr("Language:"))
+        self.keyboardLabel.setText(self.tr("Keyboard Kind:"))
+        self.testEdit.setPlaceholderText(self.tr("Test out your keyboard."))
 
     def keyboardModelSelect(self, value):
         for model in self.keyboard_list.keys():

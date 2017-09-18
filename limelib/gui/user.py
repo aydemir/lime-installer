@@ -62,22 +62,19 @@ class UserWidget(QWidget):
     def __init__(self, parent=None):
         super().__init__()
         self.parent = parent
-        self.setWindowTitle(self.tr("User Creation"))
         self.setStyleSheet("QToolButton {border: none;}")
         self.setLayout(QHBoxLayout())
 
         left_layout = QVBoxLayout()
         self.layout().addLayout(left_layout)
 
-        name_label = QLabel()
-        name_label.setText(self.tr("What is your name?"))
-        left_layout.addWidget(name_label)
+        self.name_label = QLabel()
+        left_layout.addWidget(self.name_label)
 
         name_layout = QHBoxLayout()
         left_layout.addLayout(name_layout)
 
         self.name_line = QLineEdit()
-        self.name_line.setPlaceholderText(self.tr("Fullname"))
         self.name_line.setFixedWidth(450)
         name_layout.addWidget(self.name_line)
 
@@ -86,15 +83,13 @@ class UserWidget(QWidget):
         self.name_icon.setScaledContents(True)
         name_layout.addWidget(self.name_icon)
 
-        user_label = QLabel()
-        user_label.setText(self.tr("Username to sign in?"))
-        left_layout.addWidget(user_label)
+        self.user_label = QLabel()
+        left_layout.addWidget(self.user_label)
 
         user_layout = QHBoxLayout()
         left_layout.addLayout(user_layout)
 
         self.user_line = QLineEdit()
-        self.user_line.setPlaceholderText(self.tr("Username"))
         user_layout.addWidget(self.user_line)
 
         self.user_icon = QLabel()
@@ -102,15 +97,13 @@ class UserWidget(QWidget):
         self.user_icon.setFixedSize(24, 24)
         user_layout.addWidget(self.user_icon)
 
-        host_label = QLabel()
-        host_label.setText(self.tr("What should this computer be named?"))
-        left_layout.addWidget(host_label)
+        self.host_label = QLabel()
+        left_layout.addWidget(self.host_label)
 
         host_layout = QHBoxLayout()
         left_layout.addLayout(host_layout)
 
         self.host_line = QLineEdit()
-        self.host_line.setPlaceholderText(self.tr("Hostname"))
         host_layout.addWidget(self.host_line)
 
         self.host_icon = QLabel()
@@ -118,16 +111,14 @@ class UserWidget(QWidget):
         self.host_icon.setScaledContents(True)
         host_layout.addWidget(self.host_icon)
 
-        pass_label = QLabel()
-        pass_label.setText(self.tr("Enter your user password."))
-        left_layout.addWidget(pass_label)
+        self.pass_label = QLabel()
+        left_layout.addWidget(self.pass_label)
 
         pass_layout = QHBoxLayout()
         left_layout.addLayout(pass_layout)
 
         self.pass_line = QLineEdit()
         self.pass_line.setEchoMode(QLineEdit.Password)
-        self.pass_line.setPlaceholderText(self.tr("Password"))
         pass_layout.addWidget(self.pass_line)
 
         self.pass_icon = QLabel()
@@ -140,7 +131,6 @@ class UserWidget(QWidget):
 
         self.repass_line = QLineEdit()
         self.repass_line.setEchoMode(QLineEdit.Password)
-        self.repass_line.setPlaceholderText(self.tr("Repassword"))
         repass_layout.addWidget(self.repass_line)
 
         self.repass_icon = QLabel()
@@ -150,12 +140,10 @@ class UserWidget(QWidget):
 
         self.auto_box = QCheckBox()
         self.auto_box.setChecked(True)
-        self.auto_box.setText(self.tr("Sign in without password."))
         left_layout.addWidget(self.auto_box)
 
         self.root_box = QCheckBox()
         self.root_box.setChecked(True)
-        self.root_box.setText(self.tr("Should the administrator and the user use the same password?"))
         left_layout.addWidget(self.root_box)
 
         rpass_layout = QHBoxLayout()
@@ -167,7 +155,6 @@ class UserWidget(QWidget):
         self.rpass_line = QLineEdit()
         self.rpass_line.hide()
         self.rpass_line.setEchoMode(QLineEdit.Password)
-        self.rpass_line.setPlaceholderText(self.tr("Root Password"))
         rpass_layout.addWidget(self.rpass_line)
 
         self.rpass_icon = QLabel()
@@ -182,7 +169,6 @@ class UserWidget(QWidget):
         self.rrepass_line = QLineEdit()
         self.rrepass_line.hide()
         self.rrepass_line.setEchoMode(QLineEdit.Password)
-        self.rrepass_line.setPlaceholderText(self.tr("Root Repassword"))
         rrepass_layout.addWidget(self.rrepass_line)
 
         self.rrepass_icon = QLabel()
@@ -228,7 +214,6 @@ class UserWidget(QWidget):
         self.take_photo = CustomToolButton()
         self.take_photo.setEnabled(len(self.cameras))
         self.take_photo.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
-        self.take_photo.setText(self.tr("Take Photo"))
         self.take_photo.setIconSize(QSize(32, 32))
         self.take_photo.setIcon(QIcon(":/images/camera.svg"))
         self.take_photo.setEnterIcon(QIcon(":/images/camera-red.svg"))
@@ -239,21 +224,19 @@ class UserWidget(QWidget):
         self.retake_photo.hide()
         self.retake_photo.setEnabled(len(self.cameras))
         self.retake_photo.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
-        self.retake_photo.setText(self.tr("Retake Photo"))
         self.retake_photo.setIconSize(QSize(32, 32))
         self.retake_photo.setIcon(QIcon(":/images/camera.svg"))
         self.retake_photo.setEnterIcon(QIcon(":/images/camera-red.svg"))
         self.retake_photo.setLeaveIcon(QIcon(":/images/camera.svg"))
         button_layout.addWidget(self.retake_photo)
 
-        select_photo = CustomToolButton()
-        select_photo.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
-        select_photo.setText(self.tr("Select Photo"))
-        select_photo.setIconSize(QSize(32, 32))
-        select_photo.setIcon(QIcon(":/images/users.svg"))
-        select_photo.setLeaveIcon(QIcon(":/images/users.svg"))
-        select_photo.setEnterIcon(QIcon(":/images/users-red.svg"))
-        button_layout.addWidget(select_photo)
+        self.select_photo = CustomToolButton()
+        self.select_photo.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
+        self.select_photo.setIconSize(QSize(32, 32))
+        self.select_photo.setIcon(QIcon(":/images/users.svg"))
+        self.select_photo.setLeaveIcon(QIcon(":/images/users.svg"))
+        self.select_photo.setEnterIcon(QIcon(":/images/users-red.svg"))
+        button_layout.addWidget(self.select_photo)
 
         self.layout().addSpacerItem(QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Expanding))
 
@@ -280,10 +263,30 @@ class UserWidget(QWidget):
         self.rpass_line.textChanged.connect(self.lineEditsControl)
         self.rrepass_line.textChanged.connect(self.lineEditsControl)
 
-        select_photo.clicked.connect(self.selectPhoto)
+        self.select_photo.clicked.connect(self.selectPhoto)
         self.take_photo.clicked.connect(self.takePhoto)
         self.retake_photo.clicked.connect(self.retakePhoto)
 
+        self.retranslate()
+
+    def retranslate(self):
+        self.select_photo.setText(self.tr("Select Photo"))
+        self.retake_photo.setText(self.tr("Retake Photo"))
+        self.take_photo.setText(self.tr("Take Photo"))
+        self.rrepass_line.setPlaceholderText(self.tr("Root Repassword"))
+        self.rpass_line.setPlaceholderText(self.tr("Root Password"))
+        self.root_box.setText(self.tr("Should the administrator and the user use the same password?"))
+        self.auto_box.setText(self.tr("Sign in without password."))
+        self.repass_line.setPlaceholderText(self.tr("Repassword"))
+        self.pass_line.setPlaceholderText(self.tr("Password"))
+        self.pass_label.setText(self.tr("Enter your user password."))
+        self.host_line.setPlaceholderText(self.tr("Hostname"))
+        self.host_label.setText(self.tr("What should this computer be named?"))
+        self.user_line.setPlaceholderText(self.tr("Username"))
+        self.user_label.setText(self.tr("Username to sign in?"))
+        self.name_line.setPlaceholderText(self.tr("Fullname"))
+        self.name_label.setText(self.tr("What is your name?"))
+        self.setWindowTitle(self.tr("User Creation"))
 
     def showEvent(self, event):
         self.lineEditsControl()

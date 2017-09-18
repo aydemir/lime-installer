@@ -27,33 +27,37 @@ class SummaryWidget(QWidget):
     def __init__(self, parent=None):
         super().__init__()
         self.parent = parent
-        self.setWindowTitle(self.tr("Installation Information"))
         self.setLayout(QVBoxLayout())
 
-        label1 = QLabel()
-        label1.setText(self.tr("<h3>Take a look at the summary of your choices for the installation.</h3>"))
-        self.layout().addWidget(label1)
+        self.label1 = QLabel()
+        self.layout().addWidget(self.label1)
 
-        label2 = QLabel()
-        label2.setText(self.tr("<h1>System Location</h1>"))
-        self.layout().addWidget(label2)
+        self.label2 = QLabel()
+        self.layout().addWidget(self.label2)
 
         self.textbrowser1 = QTextBrowser()
         self.layout().addWidget(self.textbrowser1)
 
-        label3 = QLabel()
-        label3.setText(self.tr("<h1>Keyboard Layout</h1>"))
-        self.layout().addWidget(label3)
+        self.label3 = QLabel()
+        self.layout().addWidget(self.label3)
 
         self.textbrowser2 = QTextBrowser()
         self.layout().addWidget(self.textbrowser2)
 
-        label4 = QLabel()
-        label4.setText(self.tr("<h1>Disk Partition</h1>"))
-        self.layout().addWidget(label4)
+        self.label4 = QLabel()
+        self.layout().addWidget(self.label4)
 
         self.textbrowser3 = QTextBrowser()
         self.layout().addWidget(self.textbrowser3)
+
+        self.retranslate()
+
+    def retranslate(self):
+        self.setWindowTitle(self.tr("Installation Information"))
+        self.label1.setText(self.tr("<h3>Take a look at the summary of your choices for the installation.</h3>"))
+        self.label2.setText(self.tr("<h1>System Location</h1>"))
+        self.label3.setText(self.tr("<h1>Keyboard Layout</h1>"))
+        self.label4.setText(self.tr("<h1>Disk Partition</h1>"))
 
     def showEvent(self, event):
         self.textbrowser1.setText(self.tr("System time will be set to {}.\nSystem language will be set to {}.")

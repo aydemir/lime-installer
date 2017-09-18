@@ -50,7 +50,6 @@ class LocationWidget(QWidget):
     def __init__(self, parent=None):
         super().__init__()
         self.parent = parent
-        self.setWindowTitle(self.tr("System Location"))
         self.setLayout(QVBoxLayout())
         self.layout().setAlignment(Qt.AlignCenter)
 
@@ -66,9 +65,8 @@ class LocationWidget(QWidget):
         hlayout = QHBoxLayout()
         self.layout().addLayout(hlayout)
 
-        cLabel = QLabel()
-        cLabel.setText(self.tr("Region:"))
-        hlayout.addWidget(cLabel)
+        self.cLabel = QLabel()
+        hlayout.addWidget(self.cLabel)
 
         self.cBox = QComboBox()
         self.cBox.setFixedWidth(300)
@@ -76,9 +74,8 @@ class LocationWidget(QWidget):
 
         hlayout.addSpacerItem(QSpacerItem(40, 20, QSizePolicy.Preferred, QSizePolicy.Expanding))
 
-        iLabel = QLabel()
-        iLabel.setText(self.tr("City:"))
-        hlayout.addWidget(iLabel)
+        self.iLabel = QLabel()
+        hlayout.addWidget(self.iLabel)
 
         self.iBox = QComboBox()
         self.iBox.setFixedWidth(300)
@@ -94,6 +91,13 @@ class LocationWidget(QWidget):
 
         self.cBox.currentTextChanged.connect(self.zoneChanged)
         self.iBox.currentTextChanged.connect(self.cityChanged)
+
+        self.retranslate()
+
+    def retranslate(self):
+        self.setWindowTitle(self.tr("System Location"))
+        self.cLabel.setText(self.tr("Region:"))
+        self.iLabel.setText(self.tr("City:"))
 
     def zoneChanged(self, zone):
         self.iBox.clear()

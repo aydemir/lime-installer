@@ -37,7 +37,6 @@ class PartitionWidget(QWidget):
     def __init__(self, parent=None):
         super().__init__()
         self.parent = parent
-        self.setWindowTitle(self.tr("Disk Partition"))
         self.setLayout(QVBoxLayout())
 
         self.parent.lilii_settings["/"] = None
@@ -48,9 +47,8 @@ class PartitionWidget(QWidget):
 
         hlayout.addSpacerItem(QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Maximum))
 
-        label1 = QLabel()
-        label1.setText(self.tr("Select where the Lime GNU/Linux is going to be installed: "))
-        hlayout.addWidget(label1)
+        self.label1 = QLabel()
+        hlayout.addWidget(self.label1)
 
         self.combo_box = QComboBox()
         self.combo_box.setFixedWidth(400)
@@ -63,13 +61,11 @@ class PartitionWidget(QWidget):
         self.label2.setStyleSheet("border: none;")
         self.label2.setIcon(QIcon(":/images/disk.svg"))
         self.label2.setIconSize(QSize(20, 20))
-        self.label2.setText("{}".format(diskType(disksList()[0]) or self.tr("Unknown")))
         hlayout.addWidget(self.label2)
 
         self.refreshButton = QPushButton()
         self.refreshButton.setIcon(QIcon(":/images/refresh.svg"))
         self.refreshButton.setIconSize(QSize(24, 24))
-        self.refreshButton.setToolTip(self.tr("Refresh disk information"))
         hlayout.addWidget(self.refreshButton)
 
         hlayout.addSpacerItem(QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Maximum))
@@ -77,11 +73,7 @@ class PartitionWidget(QWidget):
         self.treePartitionWidget = QTreeWidget()
         self.layout().addWidget(self.treePartitionWidget)
 
-        header = self.treePartitionWidget.headerItem()
-        header.setText(0, self.tr("Disk Part"))
-        header.setText(1, self.tr("File System"))
-        header.setText(2, self.tr("Mount Point"))
-        header.setText(3, self.tr("Size"))
+        self.header = self.treePartitionWidget.headerItem()
 
         self.treePartitionWidget.setColumnWidth(0, 450)
         self.treePartitionWidget.setColumnWidth(1, 150)
@@ -95,24 +87,18 @@ class PartitionWidget(QWidget):
         hlayout.addSpacerItem(QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Maximum))
 
         self.editPartitionButton = QPushButton()
-        self.editPartitionButton.setText(self.tr("Edit"))
         hlayout.addWidget(self.editPartitionButton)
 
         self.zeroPartitionButton = QPushButton()
-        self.zeroPartitionButton.setText(self.tr("Reset"))
         hlayout.addWidget(self.zeroPartitionButton)
 
-
-
+        self.bootLabel = QLabel()
         if not is_efi():
             hlayout = QHBoxLayout()
             self.layout().addLayout(hlayout)
 
             hlayout.addSpacerItem(QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Maximum))
-
-            bootLabel = QLabel()
-            bootLabel.setText(self.tr("Where to install the bootloader:"))
-            hlayout.addWidget(bootLabel)
+            hlayout.addWidget(self.bootLabel)
 
             self.combo_box2 = QComboBox()
             self.combo_box2.setFixedWidth(400)
@@ -138,6 +124,20 @@ class PartitionWidget(QWidget):
 
         self.diskPartitionList(diskInfo(disksList()[self.combo_box.currentIndex()]))
 
+        self.retranslate()
+
+    def retranslate(self):
+        self.setWindowTitle(self.tr("Disk Partition"))
+        self.label1.setText(self.tr("Select where the Lime GNU/Linux is going to be installed: "))
+        self.label2.setText("{}".format(diskType(disksList()[0]) or self.tr("Unknown")))
+        self.refreshButton.setToolTip(self.tr("Refresh disk information"))
+        self.header.setText(0, self.tr("Disk Part"))
+        self.header.setText(1, self.tr("File System"))
+        self.header.setText(2, self.tr("Mount Point"))
+        self.header.setText(3, self.tr("Size"))
+        self.editPartitionButton.setText(self.tr("Edit"))
+        self.zeroPartitionButton.setText(self.tr("Reset"))
+        self.bootLabel.setText(self.tr("Where to install the bootloader:"))
 
     def diskSelect(self, index):
         self.label2.setText("{}".format(diskType(disksList()[index])))

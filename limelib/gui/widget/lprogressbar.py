@@ -20,8 +20,8 @@
 #
 
 from PyQt5.QtWidgets import QWidget
-from PyQt5.QtGui import QPainter, QFont, QColor
-from PyQt5.QtCore import Qt, QRect
+from PyQt5.QtGui import QPainter, QColor
+from PyQt5.QtCore import Qt
 
 
 class LProgressBar(QWidget):
@@ -58,7 +58,7 @@ class LProgressBar(QWidget):
 
     def paintEvent(self, event):
         painter = QPainter(self)
-        painter.setRenderHint(QPainter.Antialiasing)
+        painter.setRenderHint(QPainter.Antialiasing|QPainter.SmoothPixmapTransform)
 
         for index in range(self._stick_count):
             if self.item_index >= index +1:

@@ -60,12 +60,8 @@ class SingleApplication(QObject):
             if len(args) > 1:
                 socket.write(args[1])
 
-            else:
-                pass
-
             socket.flush()
             return True
-
         return False
 
     def newConnection(self):
@@ -77,16 +73,18 @@ class SingleApplication(QObject):
         self.urlPost.emit(str(self.mSocket.readAll()))
         self.mSocket.close()
 
+
 class TitleWidget(QWidget):
     def __init__(self, parent=None):
         super().__init__()
         self.parent = parent
-        self.setFixedHeight(100)
+        self.setFixedHeight(90)
         self.setLayout(QHBoxLayout())
         self.layout().addSpacing(0)
+        self.layout().setContentsMargins(0, 0, 0, 0)
 
         self.logo = QLabel()
-        self.logo.setFixedSize(72, 72)
+        self.logo.setFixedSize(96, 96)
         self.logo.setScaledContents(True)
         self.logo.setPixmap(QPixmap(":/images/lime-logo.svg"))
         self.layout().addWidget(self.logo)
@@ -99,36 +97,32 @@ class TitleWidget(QWidget):
         self.parent.currentChanged.connect(self.lprogressBar.setIndex)
 
 
-
 class FooterWidget(QWidget):
     def __init__(self, parent=None):
         super().__init__()
         self.parent = parent
-        self.setFixedHeight(50)
+        self.setFixedHeight(35)
         self.setLayout(QHBoxLayout())
+        self.layout().setContentsMargins(0, 0, 0, 0)
 
         self.layout().addItem(QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Expanding))
 
         self.cancelButton = QPushButton()
         self.cancelButton.setIcon(QIcon(":/images/cancel.svg"))
-        self.cancelButton.setText(self.tr("Cancel"))
         self.layout().addWidget(self.cancelButton)
 
         self.layout().addItem(QSpacerItem(40, 20, QSizePolicy.Maximum, QSizePolicy.Maximum))
 
         self.backButton = QPushButton()
         self.backButton.setIcon(QIcon(":/images/back.svg"))
-        self.backButton.setText(self.tr("Back"))
         self.layout().addWidget(self.backButton)
 
         self.continueButton = QPushButton()
         self.continueButton.setIcon(QIcon(":/images/forward.svg"))
-        self.continueButton.setText(self.tr("Continue"))
         self.layout().addWidget(self.continueButton)
 
         self.applyButton = QPushButton()
         self.applyButton.setIcon(QIcon(":/images/apply.svg"))
-        self.applyButton.setText(self.tr("Finish"))
         self.layout().addWidget(self.continueButton)
 
         self.parent.currentChanged.connect(self.buttonStatus)
@@ -136,16 +130,30 @@ class FooterWidget(QWidget):
         self.backButton.clicked.connect(self.proviousWidget)
         self.cancelButton.clicked.connect(self.cancelQuestion)
 
+        self.retranslate()
+
         if self.parent.currentIndex() == 0:
             self.backButton.setDisabled(True)
 
+    def retranslate(self):
+        self.cancelButton.setText(self.tr("Cancel"))
+        self.backButton.setText(self.tr("Back"))
+        self.continueButton.setText(self.tr("Continue"))
+        self.applyButton.setText(self.tr("Finish"))
+
     def cancelQuestion(self):
-        question = QMessageBox.question(self, self.tr("Do you want to quit?"),
-                                        self.tr("Do you want to quit from Lime GNU/Linux System Installer?"))
+        self.questionBox = QMessageBox()
+        self.questionBox.setIcon(QMessageBox.Question)
+        self.questionBox.setWindowTitle(self.tr("Do you want to quit?"))
+        self.questionBox.setText(self.tr("Do you want to quit from Lime GNU/Linux System Installer?"))
 
-        if question == QMessageBox.Yes:
+        yes = self.questionBox.addButton(self.tr("Yes"), QMessageBox.ActionRole)
+        no = self.questionBox.addButton(self.tr("No"), QMessageBox.NoRole)
+        self.questionBox.setDefaultButton(yes)
+        self.questionBox.exec()
+
+        if self.questionBox.clickedButton() == yes:
             qApp.quit()
-
 
     def buttonStatus(self, current):
         self.backButton.setEnabled(True)
@@ -165,15 +173,19 @@ class FooterWidget(QWidget):
 
     def nextWidget(self):
         if self.parent.currentIndex() == 5:
-            warning = QMessageBox.warning(self, self.tr("Be Carefull!"),
-                                          self.tr("Setup is going to start in the next step and "
-                                          "stated steps are going to be applied to your system."),
-                                          QMessageBox.Yes|QMessageBox.No)
+            self.warningBox = QMessageBox()
+            self.warningBox.setIcon(QMessageBox.Warning)
+            self.warningBox.setWindowTitle(self.tr("Be Carefull!"))
+            self.warningBox.setText(self.tr("Setup is going to start in the next step and "
+                                    "stated steps are going to be applied to your system."))
 
-            if warning == QMessageBox.Yes:
+            yes = self.warningBox.addButton(self.tr("Yes"), QMessageBox.ActionRole)
+            no = self.warningBox.addButton(self.tr("No"), QMessageBox.NoRole)
+            self.warningBox.setDefaultButton(yes)
+            self.warningBox.exec()
+
+            if self.warningBox.clickedButton() == yes:
                 self.parent.setCurrentIndex(self.parent.currentIndex() + 1)
-
-            else: pass
 
         else:
             self.parent.setCurrentIndex(self.parent.currentIndex()+1)
@@ -192,11 +204,11 @@ class MainWindow(QWidget):
     def __init__(self, parent=None):
         super().__init__()
         self.setFixedSize(950, 580)
-        self.setWindowTitle(self.tr("Lime GNU/Linux System Installer"))
-        self.setWindowIcon(QIcon(":/images/lime-installer-logo.svg"))
+        self.setWindowIcon(QIcon(":/images/lime-installer.svg"))
         self.setWindowFlags(Qt.WindowTitleHint|Qt.WindowMinimizeButtonHint) #Qt.WindowStaysOnTopHint
 
-        x, y = (QDesktopWidget().width()-self.width())/2, (QDesktopWidget().availableGeometry().height()-self.height())/2
+        x, y = (QDesktopWidget().width()-self.width())//2,\
+               (QDesktopWidget().availableGeometry().height()-self.height())//2
         self.move(x, y)
 
         layout = QVBoxLayout()
@@ -223,6 +235,12 @@ class MainWindow(QWidget):
         self.wizardWidget.widget(4).applyPage.connect(self.footerWidget.continueButton.setEnabled)
         self.wizardWidget.widget(3).applyPage.connect(self.footerWidget.continueButton.setEnabled)
         self.wizardWidget.widget(6).applyPage.connect(self.footerWidget.continueButton.setEnabled)
+
+        self.retranslate()
+
+    def retranslate(self):
+        self.setWindowTitle(self.tr("Lime GNU/Linux System Installer"))
+
 
     def closeEvent(self, event):
         if not qApp.quitOnLastWindowClosed():

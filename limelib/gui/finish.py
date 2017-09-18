@@ -37,20 +37,16 @@ class FinishWidget(QWidget):
     def __init__(self, parent=None):
         super().__init__()
         self.parent = parent
-        self.setWindowTitle(self.tr("Finish"))
         self.setLayout(QVBoxLayout())
 
-        titleText = QLabel()
-        self.layout().addWidget(titleText)
-        titleText.setAlignment(Qt.AlignCenter)
-        titleText.setText(self.tr("<h1>All of the process is completed.</h1>"))
+        self.titleText = QLabel()
+        self.layout().addWidget(self.titleText)
+        self.titleText.setAlignment(Qt.AlignCenter)
 
-        descText = QLabel()
-        descText.setWordWrap(True)
-        descText.setAlignment(Qt.AlignCenter)
-        descText.setText(self.tr("Lime GNU/Linux, has been installed successfully to your system.\nTo use the newly installed system "
-                                 "you can restart or you can continue to use Lime GNU/Linux Live system."))
-        self.layout().addWidget(descText)
+        self.descText = QLabel()
+        self.descText.setWordWrap(True)
+        self.descText.setAlignment(Qt.AlignCenter)
+        self.layout().addWidget(self.descText)
 
         hlayout = QHBoxLayout()
         self.layout().addLayout(hlayout)
@@ -67,6 +63,15 @@ class FinishWidget(QWidget):
         hlayout.addItem(QSpacerItem(40, 20, QSizePolicy.Preferred, QSizePolicy.Preferred))
 
         restartButton.clicked.connect(self.systemRestart)
+
+        self.retranslate()
+
+    def retranslate(self):
+        self.setWindowTitle(self.tr("Finish"))
+        self.titleText.setText(self.tr("<h1>All of the process is completed.</h1>"))
+        self.descText.setText(self.tr("Lime GNU/Linux, has been installed successfully to your system.\n"
+                                      "To use the newly installed system "
+                                      "you can restart or you can continue to use Lime GNU/Linux Live system."))
 
     def systemRestart(self):
         QProcess.startDetached("reboot", ["-n"])

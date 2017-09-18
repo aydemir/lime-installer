@@ -26,8 +26,9 @@ from PyQt5.QtCore import QTimer
 
 class Slide(QWidget):
 
-    def __init__(self):
+    def __init__(self, parent=None):
         super().__init__()
+        self.parent = parent
         self.setLayout(QVBoxLayout())
 
         self.image = QLabel()
@@ -49,12 +50,9 @@ class SlideWidget(QStackedWidget):
 
     def __init__(self, parent=None):
         super().__init__()
+        self.parent = parent
 
         self.timer = QTimer(self)
-
-
-
-
         self.timer.timeout.connect(self.nextSlide)
 
     def setSlideDuration(self, second):
