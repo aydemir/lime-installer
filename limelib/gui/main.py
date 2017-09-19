@@ -22,7 +22,7 @@
 from PyQt5.QtWidgets import (QWidget, QApplication, QStackedWidget, QVBoxLayout, QHBoxLayout, QSpacerItem, QSizePolicy,
                              QPushButton, QDesktopWidget, QLabel, qApp, QMessageBox)
 from PyQt5.QtGui import QPixmap, QIcon
-from PyQt5.QtCore import Qt, QObject, QTranslator, QLocale, pyqtSignal
+from PyQt5.QtCore import Qt, QObject, QTranslator, QLocale, pyqtSignal, QFile
 from PyQt5.QtNetwork import QLocalServer, QLocalSocket
 from .welcome import WelcomeWidget
 from .finish import FinishWidget
@@ -258,7 +258,10 @@ def main():
     app.setApplicationVersion("1.0 Beta")
     locale = QLocale.system().name()
     translator = QTranslator(app)
-    translator.load("/usr/share/lime-installer/languages/{}.qm".format(locale))
+    path = "/usr/share/lime-installer/languages/{}.qm".format(locale)
+    if not QFile().exists(path):
+        path = "languages/{}.qm".format(locale)
+    translator.load(path)
     app.installTranslator(translator)
 
     single = SingleApplication()

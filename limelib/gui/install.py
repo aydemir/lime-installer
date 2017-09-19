@@ -60,33 +60,53 @@ class InstallWidget(QWidget):
     def addSlides(self):
         self.slide1 = Slide()
         self.slide1.setResource(":/images/about.svg")
-        self.slide1.setDescription(self.tr("Deneme 1"))
+        self.slide1.setDescription(self.tr("text_1"))
         self.slide_widget.addWidget(self.slide1)
 
         self.slide2 = Slide()
         self.slide2.setResource(":/images/apply.svg")
-        self.slide2.setDescription(self.tr("Deneme 2"))
+        self.slide2.setDescription(self.tr("text_2"))
         self.slide_widget.addWidget(self.slide2)
 
         self.slide3 = Slide()
         self.slide3.setResource(":/images/back.svg")
-        self.slide3.setDescription(self.tr("Deneme 3"))
+        self.slide3.setDescription(self.tr("text_3"))
         self.slide_widget.addWidget(self.slide3)
 
         self.slide4 = Slide()
         self.slide4.setResource(":/images/camera.svg")
-        self.slide4.setDescription(self.tr("Deneme 4"))
+        self.slide4.setDescription(self.tr("text_4"))
         self.slide_widget.addWidget(self.slide4)
 
         self.slide5 = Slide()
         self.slide5.setResource(":/images/disk.svg")
-        self.slide5.setDescription(self.tr("Deneme 5"))
+        self.slide5.setDescription(self.tr("text_5"))
         self.slide_widget.addWidget(self.slide5)
 
         self.slide6 = Slide()
         self.slide6.setResource(":/images/exit.svg")
-        self.slide6.setDescription(self.tr("Deneme 6"))
+        self.slide6.setDescription(self.tr("text_6"))
         self.slide_widget.addWidget(self.slide6)
+
+        self.slide7 = Slide()
+        self.slide7.setResource(":/images/exit.svg")
+        self.slide7.setDescription(self.tr("text_7"))
+        self.slide_widget.addWidget(self.slide7)
+
+        self.slide8 = Slide()
+        self.slide8.setResource(":/images/exit.svg")
+        self.slide8.setDescription(self.tr("text_8"))
+        self.slide_widget.addWidget(self.slide8)
+
+        self.slide9 = Slide()
+        self.slide9.setResource(":/images/exit.svg")
+        self.slide9.setDescription(self.tr("text_9"))
+        self.slide_widget.addWidget(self.slide9)
+
+        self.slide10 = Slide()
+        self.slide10.setResource(":/images/exit.svg")
+        self.slide10.setDescription(self.tr("text_10"))
+        self.slide_widget.addWidget(self.slide10)
 
     def finish(self):
         self.applyPage.emit(True)

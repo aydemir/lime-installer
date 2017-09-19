@@ -132,9 +132,10 @@ class WelcomeWidget(QWidget):
         self.aboutBox.setWindowTitle(self.tr("About Lime Installer"))
         self.aboutBox.setText(self.tr("<h1>Lime Installer {}</h1>"
                                       "<b>System installer for Lime GNU/Linux</b>"
-                                      "<p>Copyright 2017 Metehan Özbek - <b>metehan@limelinux.com</b><br>"
+                                      "<p>Copyright 2017 Metehan Ozbek - <b>metehan@limelinux.com</b><br>"
                                       "Thanks to: Fatih Kaya - <b>trlinux41@gmail.com</b></p>").format(
                                       qApp.applicationVersion()))
+        self.aboutBox.exec_()
 
     def bugAdressConnect(self):
         QDesktopServices.openUrl(QUrl("https://github.com/lime-installer/lime-installer/issues"))
