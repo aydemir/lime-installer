@@ -208,8 +208,8 @@ class MainWindow(QWidget):
         self.setWindowIcon(QIcon(":/images/lime-installer.svg"))
         self.setWindowFlags(Qt.WindowTitleHint|Qt.WindowMinimizeButtonHint) #Qt.WindowStaysOnTopHint
 
-        x, y = (QDesktopWidget().width()-self.width())//2,\
-               (QDesktopWidget().availableGeometry().height()-self.height())//2
+        x, y = ((QDesktopWidget().width()-self.width())//2,
+               (QDesktopWidget().availableGeometry().height()-self.height())//2)
         self.move(x, y)
 
         layout = QVBoxLayout()
@@ -237,6 +237,7 @@ class MainWindow(QWidget):
         self.wizardWidget.widget(3).applyPage.connect(self.footerWidget.continueButton.setEnabled)
         self.wizardWidget.widget(6).applyPage.connect(self.footerWidget.continueButton.setEnabled)
         self.languageChanged.connect(self.retranslate)
+        self.languageChanged.connect(self.footerWidget.retranslate)
 
         self.retranslate()
 
