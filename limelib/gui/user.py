@@ -21,11 +21,11 @@
 
 from PyQt5.QtWidgets import (QWidget, QHBoxLayout, QVBoxLayout, QLineEdit, QLabel, QToolButton, QCheckBox, QFileDialog,
                              QSizePolicy, QSpacerItem)
-from PyQt5.QtGui import QPixmap, QIcon
-from PyQt5.QtCore import QSize, Qt, pyqtSignal, QDir
+from PyQt5.QtGui import QPixmap, QIcon, QImage
+from PyQt5.QtCore import QSize, Qt, pyqtSignal, QDir, QTimer
 from PyQt5.QtMultimedia import QCamera, QCameraImageCapture, QCameraInfo
 from PyQt5.QtMultimediaWidgets import QCameraViewfinder
-from PIL import Image
+from PIL import Image, ImageQt
 from ..tools import imageCrop, avatarCreate
 
 class CustomToolButton(QToolButton):
@@ -146,8 +146,7 @@ class UserWidget(QWidget):
         rpass_layout = QHBoxLayout()
         left_layout.addLayout(rpass_layout)
 
-        self.spacer = QSpacerItem(0, 40, QSizePolicy.Maximum, QSizePolicy.Expanding)
-        rpass_layout.addSpacerItem(self.spacer)
+        rpass_layout.addSpacerItem(QSpacerItem(0, 40, QSizePolicy.Maximum, QSizePolicy.Expanding))
 
         self.rpass_line = QLineEdit()
         self.rpass_line.hide()
@@ -174,6 +173,8 @@ class UserWidget(QWidget):
         self.rrepass_icon.setFixedSize(24, 24)
         rrepass_layout.addWidget(self.rrepass_icon)
 
+        left_layout.addSpacerItem(QSpacerItem(20, 40, QSizePolicy.Maximum, QSizePolicy.Expanding))
+
         self.layout().addSpacerItem(QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Expanding))
 
         right_layout = QVBoxLayout()
@@ -182,7 +183,6 @@ class UserWidget(QWidget):
         ######## Camera
 
         self.cameras = QCameraInfo.availableCameras()
-        print(self.cameras)
 
         self.photo_label = QLabel()
         self.photo_label.setFixedSize(192, 192)
@@ -192,18 +192,11 @@ class UserWidget(QWidget):
         right_layout.addWidget(self.photo_label)
 
         if len(self.cameras):
-            self.photo_label.hide()
-
-            self.photo_widget = QCameraViewfinder()
-            self.photo_widget.setFixedSize(192/4*5, 192)
-            right_layout.addWidget(self.photo_widget)
-
             self.camera = QCamera(self.cameras[0])
-            self.camera.setViewfinder(self.photo_widget)
             self.camera.setCaptureMode(QCamera.CaptureStillImage)
 
             self.image_capture = QCameraImageCapture(self.camera)
-            self.image_capture.imageSaved.connect(self.imageCapture)
+            self.image_capture.imageSaved.connect(self.imageConvert)
 
         button_layout = QHBoxLayout()
         right_layout.addLayout(button_layout)
@@ -264,6 +257,9 @@ class UserWidget(QWidget):
         self.take_photo.clicked.connect(self.takePhoto)
         self.retake_photo.clicked.connect(self.retakePhoto)
         self.parent.languageChanged.connect(self.retranslate)
+
+        self.image_timer = QTimer(self)
+        self.image_timer.timeout.connect(self.cameraView)
 
         self.retranslate()
 
@@ -425,25 +421,24 @@ class UserWidget(QWidget):
         self.take_photo.hide()
         self.retake_photo.show()
 
-        self.image_capture.capture("/tmp/image")
+        self.parent.lilii_settings["avatar"] = True
+        self.image_timer.stop()
         self.camera.stop()
-
-        self.photo_label.show()
-        self.photo_widget.hide()
 
     def retakePhoto(self):
         self.retake_photo.hide()
         self.take_photo.show()
         self.camera.start()
+        self.parent.lilii_settings["avatar"] = False
+        self.image_timer.start(1000//30)
 
-        self.photo_widget.show()
-        self.photo_label.hide()
+    def cameraView(self):
+        self.image_capture.capture("/tmp/frame")
 
-    def imageCapture(self, id, image_file):
+    def imageConvert(self, id, image):
         path = QDir.homePath() + "/.face.icon"
-        im = Image.open(image_file)
+        im = Image.open(image)
         crop_image = im.crop(imageCrop(im))
         new_image = avatarCreate(crop_image)
         new_image.save(path, "PNG")
-        self.photo_label.setPixmap(QPixmap(path))
-        self.parent.lilii_settings["avatar"] = True
+        self.photo_label.setPixmap(QPixmap.fromImage(ImageQt.ImageQt(new_image)))
