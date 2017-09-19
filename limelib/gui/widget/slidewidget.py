@@ -19,7 +19,7 @@
 #
 #
 
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QHBoxLayout, QSpacerItem, QSizePolicy, QStackedWidget
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QStackedWidget
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import QTimer
 
@@ -68,7 +68,3 @@ class SlideWidget(QStackedWidget):
 
         else:
             self.setCurrentIndex(0)
-
-
-
-

@@ -26,6 +26,7 @@ from PyQt5.QtCore import QSize, Qt, QProcess, pyqtSignal
 from ..tools import *
 from .widget.diskeditwidget import DiskEditWidget
 import parted
+from ..tools.settings import Settings
 
 
 class PartitionWidget(QWidget):
@@ -128,8 +129,9 @@ class PartitionWidget(QWidget):
         self.retranslate()
 
     def retranslate(self):
+        distro_name = Settings().value("distro_name")
         self.setWindowTitle(self.tr("Disk Partition"))
-        self.label1.setText(self.tr("Select where the Lime GNU/Linux is going to be installed: "))
+        self.label1.setText(self.tr("Select where the {} is going to be installed: ").format(distro_name))
         self.label2.setText("{}".format(diskType(disksList()[0]) or self.tr("Unknown")))
         self.refreshButton.setToolTip(self.tr("Refresh disk information"))
         self.header.setText(0, self.tr("Disk Part"))

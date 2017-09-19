@@ -23,6 +23,7 @@ from PyQt5.QtWidgets import QWidget, QProgressBar, QLabel, QVBoxLayout
 from PyQt5.QtCore import QThread, pyqtSignal, Qt, QDir
 from .widget.slidewidget import Slide, SlideWidget
 from ..tools import is_efi
+from ..tools.settings import Settings
 import os
 import subprocess
 import shutil
@@ -136,10 +137,12 @@ class Install(QThread):
         super().__init__()
         self.parent = parent
 
-        self.rootfs_path = "/bootmnt/pisi/x86_64/rootfs.sqfs"
-        self.desktopfs_path = "/bootmnt/pisi/x86_64/desktop.sqfs"
+        settings = Settings()
 
-        self.mount_path = "/tmp/lime"
+        self.rootfs_path = settings.value("rootfs_path")
+        self.desktopfs_path = settings.value("desktopfs_path")
+
+        self.mount_path = settings.value("mount_path")
 
         self.hostname = self.parent.parent.lilii_settings["hostname"]
         self.locale = self.parent.parent.lilii_settings["lang"]
@@ -436,6 +439,9 @@ class Install(QThread):
 
         self.__percent += 1
         self.percent.emit(self.__percent)
+
+        #gdm
+        #sddm
 
         #XOrg
         #self.chroot_command("Xorg :1 -configure")

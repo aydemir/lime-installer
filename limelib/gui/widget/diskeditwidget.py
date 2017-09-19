@@ -20,8 +20,6 @@
 #
 
 from PyQt5.QtWidgets import QDialog, QLabel, QComboBox, QHBoxLayout, QVBoxLayout, QDialogButtonBox
-from PyQt5.QtGui import QPainter, QFont, QColor
-from PyQt5.QtCore import Qt, QRect
 from ...tools import is_efi
 
 

@@ -36,6 +36,7 @@ from .widget.lprogressbar import LProgressBar
 
 import sys
 from .. import limerc
+from ..tools.settings import Settings
 
 
 class SingleApplication(QObject):
@@ -145,7 +146,8 @@ class FooterWidget(QWidget):
         self.questionBox = QMessageBox()
         self.questionBox.setIcon(QMessageBox.Question)
         self.questionBox.setWindowTitle(self.tr("Do you want to quit?"))
-        self.questionBox.setText(self.tr("Do you want to quit from Lime GNU/Linux System Installer?"))
+        distro_name = Settings().value("distro_name")
+        self.questionBox.setText(self.tr("Do you want to quit from {} System Installer?").format(distro_name))
 
         yes = self.questionBox.addButton(self.tr("Yes"), QMessageBox.ActionRole)
         no = self.questionBox.addButton(self.tr("No"), QMessageBox.NoRole)
@@ -242,7 +244,7 @@ class MainWindow(QWidget):
         self.retranslate()
 
     def retranslate(self):
-        self.setWindowTitle(self.tr("Lime GNU/Linux System Installer"))
+        self.setWindowTitle(self.tr("{} System Installer").format(Settings().value("distro_name")))
 
 
     def closeEvent(self, event):

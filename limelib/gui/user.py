@@ -23,12 +23,9 @@ from PyQt5.QtWidgets import (QWidget, QHBoxLayout, QVBoxLayout, QLineEdit, QLabe
                              QSizePolicy, QSpacerItem)
 from PyQt5.QtGui import QPixmap, QIcon
 from PyQt5.QtCore import QSize, Qt, pyqtSignal, QDir
-from PyQt5.QtMultimedia import QCamera, QCameraImageCapture, QCameraInfo, QCameraImageProcessing
+from PyQt5.QtMultimedia import QCamera, QCameraImageCapture, QCameraInfo
 from PyQt5.QtMultimediaWidgets import QCameraViewfinder
-import os
-import shutil
 from PIL import Image
-from PIL.ImageQt import ImageQt
 from ..tools import imageCrop, avatarCreate
 
 class CustomToolButton(QToolButton):

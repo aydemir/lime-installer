@@ -22,7 +22,7 @@
 from PyQt5.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QLabel, QPushButton, QSizePolicy, QSpacerItem, qApp
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt, QSize, QProcess
-
+from ..tools.settings import Settings
 
 class CustomButton(QPushButton):
 
@@ -68,11 +68,12 @@ class FinishWidget(QWidget):
         self.retranslate()
 
     def retranslate(self):
+        distro_name = Settings().value("distro_name")
         self.setWindowTitle(self.tr("Finish"))
         self.titleText.setText(self.tr("<h1>All of the process is completed.</h1>"))
-        self.descText.setText(self.tr("Lime GNU/Linux, has been installed successfully to your system.\n"
+        self.descText.setText(self.tr("{0}, has been installed successfully to your system.\n"
                                       "To use the newly installed system "
-                                      "you can restart or you can continue to use Lime GNU/Linux Live system."))
+                                      "you can restart or you can continue to use {0} Live system.").format(distro_name))
 
     def systemRestart(self):
         QProcess.startDetached("reboot", ["-n"])

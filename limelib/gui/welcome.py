@@ -22,6 +22,7 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QComboBox, QPushButton, qApp, QMessageBox
 from PyQt5.QtGui import QPixmap, QIcon, QDesktopServices
 from PyQt5.QtCore import Qt, QSize, QTranslator, QLocale, QUrl, QFile
+from ..tools.settings import Settings
 
 
 class WelcomeWidget(QWidget):
@@ -104,10 +105,11 @@ class WelcomeWidget(QWidget):
         self.retranslate()
 
     def retranslate(self):
+        distro_name = Settings().value("distro_name")
         self.setWindowTitle(self.tr("Welcome"))
-        self.titleLabel.setText(self.tr("<h1>Welcome to Lime GNU/Linux System Installer.</h1>"))
-        self.descLabel.setText(self.tr(
-            "This program is going to ask you some questions and then will install the Lime GNU/Linux to your device."))
+        self.titleLabel.setText(self.tr("<h1>Welcome to {} System Installer.</h1>").format(distro_name))
+        self.descLabel.setText(self.tr("This program is going to ask you some questions"\
+                                       " and then will install the {} to your device.").format(distro_name))
         self.langLabel.setText(self.tr("Language:"))
         self.aboutButton.setText(self.tr("About"))
         self.bugButton.setText(self.tr("Found Bug"))
@@ -128,17 +130,18 @@ class WelcomeWidget(QWidget):
                 self.parent.languageChanged.emit()
 
     def aboutDialog(self):
+        distro_name = Settings().value("distro_name")
         self.aboutBox = QMessageBox()
         self.aboutBox.setWindowTitle(self.tr("About Lime Installer"))
         self.aboutBox.setText(self.tr("<h1>Lime Installer {}</h1>"
-                                      "<b>System installer for Lime GNU/Linux</b>"
+                                      "<b>System installer for {}</b>"
                                       "<p>Copyright 2017 Metehan Ozbek - <b>metehan@limelinux.com</b><br>"
                                       "Thanks to: Fatih Kaya - <b>trlinux41@gmail.com</b></p>").format(
-                                      qApp.applicationVersion()))
+                                      qApp.applicationVersion(), distro_name))
         self.aboutBox.exec_()
 
     def bugAdressConnect(self):
-        QDesktopServices.openUrl(QUrl("https://github.com/lime-installer/lime-installer/issues"))
+        QDesktopServices.openUrl(QUrl(Settings().value("bug_adress")))
 
     def releaseInfoConnect(self):
-        QDesktopServices.openUrl(QUrl("http://limelinux.com/limelinux-indir.html"))
+        QDesktopServices.openUrl(QUrl(Settings().value("release_info_url")))
