@@ -37,9 +37,9 @@ class KeyboardWidget(QWidget):
         self.layout().addLayout(centerLayout)
 
         keyLabel = QLabel()
-        keyLabel.setFixedSize(283*3.5, 80*3.5)
+        keyLabel.setFixedSize(779, 219)
         keyLabel.setScaledContents(True)
-        keyLabel.setPixmap(QPixmap(":/images/keyboard.svg"))
+        keyLabel.setPixmap(QPixmap(":/images/keyboard.png"))
         centerLayout.addWidget(keyLabel)
 
         hlayoutx = QHBoxLayout()
@@ -74,6 +74,8 @@ class KeyboardWidget(QWidget):
         self.testEdit = QLineEdit()
         #self.testEdit.setFixedWidth(800)
         self.layout().addWidget(self.testEdit)
+
+        self.layout().addSpacerItem(QSpacerItem(20, 40, QSizePolicy.Maximum, QSizePolicy.MinimumExpanding))
 
         self.keyboard_list = None
         if os.path.isfile("/usr/share/lime-installer/data/models.json"):
