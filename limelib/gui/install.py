@@ -362,7 +362,7 @@ class Install(QThread):
                    "\t\tOption \"XkbVariant\" \"{}\"\n"\
                    "EndSection\n".format(self.keyboard_model, self.keyboard_layout, self.keyboard_variant)
 
-        with open(self.mount_path+"/root"+"/etc/X11/xorg.conf.d/10-keyboard.conf", "w") as keyboard_conf:
+        with open(self.mount_path+"/root"+Settings().value("keyboard_conf"), "w") as keyboard_conf:
             keyboard_conf.write(keyboard)
             keyboard_conf.flush()
             keyboard_conf.close()
