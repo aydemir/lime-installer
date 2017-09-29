@@ -22,7 +22,7 @@
 from PyQt5.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QComboBox, QLabel, QLineEdit, QSpacerItem, QSizePolicy
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt
-from .widget.keyboardwidget import KeyboardWidget
+from .widget.keyboardlabel import KeyboardLabel
 import os
 import json
 
@@ -37,7 +37,7 @@ class KeyboardWidget(QWidget):
         centerLayout = QHBoxLayout()
         self.layout().addLayout(centerLayout)
 
-        self.keyLabel = KeyboardWidget(self)
+        self.keyLabel = KeyboardLabel(self)
         centerLayout.addWidget(self.keyLabel)
 
         hlayoutx = QHBoxLayout()

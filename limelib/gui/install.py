@@ -415,6 +415,11 @@ class Install(QThread):
 
         #self.chroot_command("passwd -d root") #su ile giriş yapmayı engelliyor gibi. sudo su çalışıyor.
 
+        #oto giriş için kod denemesi
+        if self.autologin:
+            self.chroot_command("groupadd -r autologin")
+            self.chroot_command("gpasswd -a {} autologin".format(self.username))
+
         if self.useravatar:
             shutil.copy(QDir.homePath() + "/.face.icon", self.mount_path+"/root/home/{}".format(self.username))
 
@@ -423,19 +428,21 @@ class Install(QThread):
 
     def set_displaymanager(self):
         #lightdm
-        conf_data = []
-        path = self.mount_path+"/root"+"/etc/lightdm/lightdm.conf"
-        with open(path) as conf:
-            for text in conf.readlines():
-                if text.startswith("autologin-user="):
-                    conf_data.append("autologin-user={}\n".format(self.username))
-                    print("autologin", self.username)
+        if os.path.isfile("/usr/bin/lightdm"):
+            if self.autologin:
+                conf_data = []
+                path = self.mount_path+"/root"+"/etc/lightdm/lightdm.conf"
+                with open(path) as conf:
+                    for text in conf.readlines():
+                        if text.startswith("autologin-user="):
+                            conf_data.append("autologin-user={}\n".format(self.username))
+                        # elif text.startswith("autologin-session="):
+                        #     conf_data.append("autologin-session=mate\n")
+                        else:
+                            conf_data.append(text)
 
-                else:
-                    conf_data.append(text)
-
-        with open(path, "w") as conf:
-            conf.write("".join(conf_data))
+                with open(path, "w") as conf:
+                    conf.write("".join(conf_data))
 
         self.__percent += 1
         self.percent.emit(self.__percent)

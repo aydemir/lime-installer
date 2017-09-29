@@ -1,11 +1,9 @@
-from PyQt5.QtWidgets import QWidget, QLabel
+from PyQt5.QtWidgets import QLabel
 from PyQt5.QtGui import QPixmap, QPainter
-from PyQt5.QtCore import Qt, QPoint
-import os
-import json
+from PyQt5.QtCore import QPoint
 
 
-class KeyboardWidget(QWidget):
+class KeyboardLabel(QLabel):
     def __init__(self, parent=None):
         super().__init__()
         self.parent = parent
@@ -13,7 +11,6 @@ class KeyboardWidget(QWidget):
         self.keyboard_image = QPixmap(":/images/keyboard.png")
 
 
-    def setKeyboardMap(self, key_map):pass
 
     def paintEvent(self, event):
         painter = QPainter(self)
