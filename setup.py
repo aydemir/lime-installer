@@ -34,7 +34,7 @@ system('pyrcc5 lime-installer.qrc -o limelib/limerc.py')
 
 datas = [('/usr/share/applications', ['data/lime-installer.desktop']),
          #('/etc/skel/.config/autostart', ['data/lime-installer.desktop']), # system start autostart uncomment
-         ('/usr/share/icons/hicolor/scalable/apps', ['images/lime-installer-logo.svg']),
+         ('/usr/share/icons/hicolor/scalable/apps', ['images/lime-installer.svg']),
          ('/usr/share/lime-installer/languages', langs),
          ('/usr/share/lime-installer/data', glob.glob("data/*.json")),
          ('/usr/share/lime-installer/', ["distro_custom.conf"])

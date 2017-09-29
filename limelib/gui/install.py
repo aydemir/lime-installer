@@ -436,8 +436,10 @@ class Install(QThread):
                     for text in conf.readlines():
                         if text.startswith("autologin-user="):
                             conf_data.append("autologin-user={}\n".format(self.username))
-                        # elif text.startswith("autologin-session="):
-                        #     conf_data.append("autologin-session=mate\n")
+                        elif text.startswith("autologin-user-timeout="):
+                            conf_data.append("autologin-user-timeout=0\n")
+                        elif text.startswith("autologin-session="):
+                            conf_data.append("autologin-session=mate\n")
                         else:
                             conf_data.append(text)
 
