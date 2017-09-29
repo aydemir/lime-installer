@@ -22,7 +22,7 @@
 from PyQt5.QtWidgets import QWidget, QLabel, QComboBox, QHBoxLayout, QVBoxLayout, QSizePolicy, QSpacerItem
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt
-
+from .widget.worldmapwidget import WorldMapWidget
 import json
 import os
 
@@ -53,10 +53,7 @@ class LocationWidget(QWidget):
         self.setLayout(QVBoxLayout())
         self.layout().setAlignment(Qt.AlignCenter)
 
-        self.worldMap = QLabel()
-        self.worldMap.setFixedSize(780, 340)
-        self.worldMap.setScaledContents(True)
-        self.worldMap.setPixmap(QPixmap(":/images/locale/map.png"))
+        self.worldMap = WorldMapWidget(self)
         self.layout().addWidget(self.worldMap)
 
         hlayout = QHBoxLayout()
@@ -89,6 +86,7 @@ class LocationWidget(QWidget):
         self.cBox.currentTextChanged.connect(self.zoneChanged)
         self.iBox.currentTextChanged.connect(self.cityChanged)
         self.parent.languageChanged.connect(self.retranslate)
+        self.worldMap.zone.connect(self.zoneChange)
 
         self.retranslate()
 
@@ -96,6 +94,10 @@ class LocationWidget(QWidget):
         self.setWindowTitle(self.tr("System Location"))
         self.cLabel.setText(self.tr("Region:"))
         self.iLabel.setText(self.tr("City:"))
+
+    def zoneChange(self, a, b):
+        self.cBox.setCurrentText(a)
+        self.iBox.setCurrentText(b)
 
     def zoneChanged(self, zone):
         self.iBox.clear()
