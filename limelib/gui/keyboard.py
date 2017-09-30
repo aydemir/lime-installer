@@ -20,7 +20,6 @@
 #
 
 from PyQt5.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QComboBox, QLabel, QLineEdit, QSpacerItem, QSizePolicy
-from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt
 from .widget.keyboardlabel import KeyboardLabel
 import os
@@ -40,11 +39,13 @@ class KeyboardWidget(QWidget):
         self.keyLabel = KeyboardLabel(self)
         centerLayout.addWidget(self.keyLabel)
 
+        self.layout().addSpacerItem(QSpacerItem(20, 40, QSizePolicy.Expanding, QSizePolicy.MinimumExpanding))
+
         hlayoutx = QHBoxLayout()
         self.layout().addLayout(hlayoutx)
 
         self.modelLabel = QLabel()
-        self.modelLabel.setFixedWidth(150)
+        #self.modelLabel.setFixedWidth(150)
         hlayoutx.addWidget(self.modelLabel)
 
         self.modelList = QComboBox()
@@ -57,7 +58,7 @@ class KeyboardWidget(QWidget):
         hlayout.addWidget(self.countryLabel)
 
         self.countryList = QComboBox()
-        self.countryList.setFixedWidth(325)
+        #self.countryList.setFixedWidth(325)
         hlayout.addWidget(self.countryList)
 
         hlayout.addSpacerItem(QSpacerItem(40, 20, QSizePolicy.Preferred, QSizePolicy.Expanding))
@@ -66,14 +67,14 @@ class KeyboardWidget(QWidget):
         hlayout.addWidget(self.keyboardLabel)
 
         self.keyboardVList = QComboBox()
-        self.keyboardVList.setFixedWidth(325)
+        #self.keyboardVList.setFixedWidth(325)
         hlayout.addWidget(self.keyboardVList)
 
         self.testEdit = QLineEdit()
         #self.testEdit.setFixedWidth(800)
         self.layout().addWidget(self.testEdit)
 
-        self.layout().addSpacerItem(QSpacerItem(20, 40, QSizePolicy.Maximum, QSizePolicy.MinimumExpanding))
+        self.layout().addSpacerItem(QSpacerItem(20, 40, QSizePolicy.Expanding, QSizePolicy.MinimumExpanding))
 
         self.keyboard_list = None
         if os.path.isfile("/usr/share/lime-installer/data/models.json"):
@@ -127,6 +128,10 @@ class KeyboardWidget(QWidget):
         self.keyboardVList.currentTextChanged.connect(self.keyboardTypeSelect)
         self.parent.languageChanged.connect(self.retranslate)
 
+        self.keyLabel.keyboardInfo.emit(self.parent.lilii_settings["keyboard_model"][0],
+                                        self.parent.lilii_settings["keyboard_layout"][0],
+                                        self.parent.lilii_settings["keyboard_variant"])
+
         self.retranslate()
 
     def retranslate(self):
@@ -140,6 +145,10 @@ class KeyboardWidget(QWidget):
         for model in self.keyboard_list.keys():
             if self.keyboard_list[model] == value:
                 self.parent.lilii_settings["keyboard_model"] = model, value
+
+        self.keyLabel.keyboardInfo.emit(self.parent.lilii_settings["keyboard_model"][0],
+                                        self.parent.lilii_settings["keyboard_layout"][0],
+                                        self.parent.lilii_settings["keyboard_variant"])
 
     def countrySelect(self, value):
         for layout in self.layout_list.keys():
@@ -155,11 +164,17 @@ class KeyboardWidget(QWidget):
                     self.keyboardVList.addItems(i.values())
 
         os.system("setxkbmap -layout {} -variant \"\"".format(self.parent.lilii_settings["keyboard_layout"][0]))
+        self.keyLabel.keyboardInfo.emit(self.parent.lilii_settings["keyboard_model"][0],
+                                        self.parent.lilii_settings["keyboard_layout"][0],
+                                        self.parent.lilii_settings["keyboard_variant"])
 
     def keyboardTypeSelect(self, value):
         if value == "Default":
             os.system("setxkbmap -variant \"\"")
             self.parent.lilii_settings["keyboard_variant"] = None
+            self.keyLabel.keyboardInfo.emit(self.parent.lilii_settings["keyboard_model"][0],
+                                            self.parent.lilii_settings["keyboard_layout"][0],
+                                            self.parent.lilii_settings["keyboard_variant"])
 
         else:
             for variant in self.variant_list.keys():
@@ -168,3 +183,7 @@ class KeyboardWidget(QWidget):
                         if key[list(key.keys())[0]] == value:
                             self.parent.lilii_settings["keyboard_variant"] = list(key.keys())[0], list(key.values())[0]
                             os.system("setxkbmap -variant {}".format(self.parent.lilii_settings["keyboard_variant"][0]))
+
+            self.keyLabel.keyboardInfo.emit(self.parent.lilii_settings["keyboard_model"][0],
+                                            self.parent.lilii_settings["keyboard_layout"][0],
+                                            self.parent.lilii_settings["keyboard_variant"][0])
