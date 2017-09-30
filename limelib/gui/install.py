@@ -451,6 +451,9 @@ class Install(QThread):
 
         #gdm
         #sddm
+        #lxdm
+        #mdm
+        #slim
 
         #XOrg
         #self.chroot_command("Xorg :1 -configure")

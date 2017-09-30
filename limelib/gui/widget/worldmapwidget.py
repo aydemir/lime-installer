@@ -6,11 +6,12 @@ import json
 class WorldMapWidget(QWidget):
 
     zone = pyqtSignal(str, str)
+    zoneName = pyqtSignal(str)
 
     def __init__(self, parent=None):
         super().__init__()
         self.parent = parent
-        self.setFixedSize(900, 450)
+        self.setFixedSize(900, 376)
         self.world_image = QPixmap(":/images/locale/world.png")
         self.pin_image = QPixmap(":/images/locale/pin.png")
         self.pin_point = QPoint(-50, -50)
@@ -29,8 +30,9 @@ class WorldMapWidget(QWidget):
 
         for zone, coordinats in self.coordinat_list.items():
             pos = self.locationToPosition(coordinats[1], coordinats[0], zone)
-            print(pos)
             self.coordinat_to_position[pos[0]] = pos[1]
+
+        self.zoneName.connect(self.pinPush)
 
     def search(self, x, y):
         deger = 1000
@@ -43,9 +45,10 @@ class WorldMapWidget(QWidget):
 
         return returner
 
-    def locationToPosition(self, longitude, latitude, time_zone):
+    def locationToPosition(self, longitude, latitude, time_zone=""):
+        height = 450 #orjinalindeki yükseklik. antartikayı kesince hesaplamada bu baz alınacak.
         x = (self.width()/2)*(longitude/180)+(self.width()/2)
-        y = (self.height()/2)-((self.height()/2)*(latitude/90))
+        y = (height/2)-((height/2)*(latitude/90))
         return ((x, y), time_zone)
 
     def mousePressEvent(self, event):
@@ -58,6 +61,12 @@ class WorldMapWidget(QWidget):
             self.zone.emit(a[0], b)
         self.update()
 
+    def pinPush(self, zone_name):
+        pos = self.coordinat_list[zone_name]
+        coordinat = self.locationToPosition(pos[-1], pos[0])
+        self.pin_point.setX(coordinat[0][0] - (self.pin_image.width() // 2))
+        self.pin_point.setY(coordinat[0][1] - (self.pin_image.height() // 2))
+        self.update()
 
     def paintEvent(self, event):
         painter = QPainter(self)

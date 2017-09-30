@@ -83,7 +83,6 @@ class KeyboardLabel(QLabel):
                 coordinat = coordinat_list[count]
                 count += 1
                 for num, key in enumerate(key_list):
-                    print(num)
                     try:
                         font = painter.font()
                         font.setPointSize(12)
