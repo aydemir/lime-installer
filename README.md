@@ -16,6 +16,7 @@ Dependency:
 * python3-qt5
 * python3-pillow
 * python3-parted
+* ckbcomp
 
 
 Artwork:

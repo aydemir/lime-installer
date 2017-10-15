@@ -20,8 +20,9 @@
 #
 
 from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QLabel, QComboBox, QHBoxLayout, QPushButton, QSpacerItem, QSizePolicy,
-                             QFrame, QButtonGroup, QTreeWidget, QTreeWidgetItem)
-from PyQt5.QtGui import QIcon
+                             QStackedWidget, QButtonGroup, QTreeWidget, QTreeWidgetItem, QRadioButton, QFormLayout,
+                             QCheckBox)
+from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtCore import QSize, Qt, QProcess, pyqtSignal
 from ..tools import *
 from .widget.diskeditwidget import DiskEditWidget
@@ -29,7 +30,101 @@ import parted
 from ..tools.settings import Settings
 
 
-class PartitionWidget(QWidget):
+class PartitionWidget(QStackedWidget):
+
+    applyPage = pyqtSignal(bool)
+
+    def __init__(self, parent=None):
+        super().__init__()
+        self.parent = parent
+
+        partitionI = PartitionWidgetI(self)
+        partitionII = PartitionWidgetII(self)
+
+        self.addWidget(partitionI)
+        self.addWidget(partitionII)
+
+        self.retranslate()
+
+    def retranslate(self):
+        self.setWindowTitle(self.tr("Disk Partition"))
+
+
+class PartitionWidgetI(QWidget):
+    def __init__(self, parent=None):
+        super().__init__()
+        self.parent = parent
+        self.setLayout(QVBoxLayout())
+        self.layout().setAlignment(Qt.AlignCenter)
+
+        hbox = QHBoxLayout()
+        self.layout().addLayout(hbox)
+
+        logo = QLabel()
+        logo.setFixedSize(64, 64)
+        logo.setScaledContents(True)
+        logo.setPixmap(QPixmap(":/images/disk-delete.svg"))
+        hbox.addWidget(logo)
+
+        self.diskDeleteRadio = QRadioButton()
+        self.diskDeleteRadio.setChecked(True)
+        font = self.diskDeleteRadio.font()
+        font.setBold(True)
+        self.diskDeleteRadio.setFont(font)
+        hbox.addWidget(self.diskDeleteRadio)
+
+        form = QFormLayout()
+        form.setContentsMargins(90, 0, 0, 0)
+        self.layout().addLayout(form)
+
+        self.warning_label = QLabel()
+        form.addRow(self.warning_label)
+
+        vbox = QVBoxLayout()
+        form.addRow(vbox)
+
+        self.cryptCheck = QCheckBox()
+        vbox.addWidget(self.cryptCheck)
+        self.crypt_label = QLabel()
+        vbox.addWidget(self.crypt_label)
+
+        vbox = QVBoxLayout()
+        form.addRow(vbox)
+
+        self.homeCheck = QCheckBox()
+        vbox.addWidget(self.homeCheck)
+        self.home_label = QLabel()
+        vbox.addWidget(self.home_label)
+
+        hbox = QHBoxLayout()
+        self.layout().addLayout(hbox)
+
+        logo = QLabel()
+        logo.setFixedSize(64, 64)
+        logo.setScaledContents(True)
+        logo.setPixmap(QPixmap(":/images/manuel-partition.svg"))
+        hbox.addWidget(logo)
+
+        self.manuelRadio = QRadioButton()
+        font = self.manuelRadio.font()
+        font.setBold(True)
+        self.manuelRadio.setFont(font)
+        hbox.addWidget(self.manuelRadio)
+
+        self.retranslate()
+
+    def retranslate(self):
+        distro = Settings().value("distro_name")
+        self.diskDeleteRadio.setText(self.tr("Diski sil ve {} kur.").format(distro))
+        self.warning_label.setText(self.tr("<font size=5>Uyarı: Bu seçenek diskinizdeki TÜM veriyi silecek!</font>"))
+        self.cryptCheck.setText(self.tr("Yüksek güvenlik için bu kurulumu şifrele."))
+        self.crypt_label.setText(self.tr("<font size=2><i>Bir sonraki adımda size şifreleme için parola sorulacak.</i></font>"))
+        self.homeCheck.setText(self.tr("Ev dizini için farklı bir disk bölümü ayarlayın."))
+        self.home_label.setText(self.tr("<font size=2><i>Bu seçenek /home dizinini farklı bir disk bölümüne ayarlayacaktır.</i></font>"))
+        self.manuelRadio.setText(self.tr("{} nereye kurulacağını seç.").format(distro))
+
+
+class PartitionWidgetII(QWidget):
 
     first_show = True
     selected_disk = diskInfo(disksList()[0])
@@ -40,8 +135,8 @@ class PartitionWidget(QWidget):
         self.parent = parent
         self.setLayout(QVBoxLayout())
 
-        self.parent.lilii_settings["/"] = None
-        self.parent.lilii_settings["/home"] = None
+        self.parent.parent.lilii_settings["/"] = None
+        self.parent.parent.lilii_settings["/home"] = None
 
         hlayout = QHBoxLayout()
         self.layout().addLayout(hlayout)
@@ -106,23 +201,23 @@ class PartitionWidget(QWidget):
             for disk in disksList():
                 self.combo_box2.addItem("{} - {} ({})".format(disk.model, mbToGB(disk.getSize()), disk.path))
 
-            self.parent.lilii_settings["bootloader"] = disksList()[0].path
+            self.parent.parent.lilii_settings["bootloader"] = disksList()[0].path
             hlayout.addWidget(self.combo_box2)
 
             hlayout.addSpacerItem(QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Maximum))
             self.combo_box2.currentIndexChanged.connect(self.bootloaderDiskSelect)
 
 
-            self.parent.lilii_settings["/boot"] = None
+            self.parent.parent.lilii_settings["/boot"] = None
 
         else:
-            self.parent.lilii_settings["/boot/efi"] = None
+            self.parent.parent.lilii_settings["/boot/efi"] = None
 
         self.editPartitionButton.clicked.connect(self.diskConnect)
         self.combo_box.currentIndexChanged.connect(self.diskSelect)
         self.zeroPartitionButton.clicked.connect(self.diskPartitionClear)
         self.refreshButton.clicked.connect(self.diskRefresh)
-        self.parent.languageChanged.connect(self.retranslate)
+        self.parent.parent.languageChanged.connect(self.retranslate)
 
         self.diskPartitionList(diskInfo(disksList()[self.combo_box.currentIndex()]))
 
@@ -130,7 +225,6 @@ class PartitionWidget(QWidget):
 
     def retranslate(self):
         distro_name = Settings().value("distro_name")
-        self.setWindowTitle(self.tr("Disk Partition"))
         self.label1.setText(self.tr("Select where the {} is going to be installed: ").format(distro_name))
         self.label2.setText("{}".format(diskType(disksList()[0]) or self.tr("Unknown")))
         self.refreshButton.setToolTip(self.tr("Refresh disk information"))
